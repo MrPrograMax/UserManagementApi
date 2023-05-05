@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Users.Commands.CreateUser
 {
-    public class CreateUserCommandHendler : IRequestHandler<DeleteUserCommand, Guid>
+    public class CreateUserCommandHendler : IRequestHandler<CreateUserCommand, Guid>
     {
         private readonly IUserManagementDbContext _dbContext;
 
@@ -16,7 +16,7 @@ namespace Application.Users.Commands.CreateUser
             _dbContext = dbContext;
         }
 
-        public async Task<Guid> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var user = new User()
             {
