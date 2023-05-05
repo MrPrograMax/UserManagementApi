@@ -1,9 +1,9 @@
 using Application;
 using Application.Common.Mappings;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -47,10 +47,6 @@ namespace WebApi
                     policy.AllowAnyOrigin();
                 });
             });
-
-
-
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,7 +59,6 @@ namespace WebApi
             app.UseRouting();
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
-
 
             app.UseEndpoints(endpoints =>
             {

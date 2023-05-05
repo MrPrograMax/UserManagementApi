@@ -22,10 +22,8 @@ namespace WebApi.Models
                     opt => opt.MapFrom(userDto => userDto.Password))
 
                 .ForMember(userCommand => userCommand.UserGroupId,
-                    opt => opt.MapFrom(userDto => userDto.UserGroupId))
+                    opt => opt.MapFrom(userDto => userDto.UserGroupId));
 
-                .ForMember(userCommand => userCommand.UserStateId,
-                    opt => opt.MapFrom(userDto => userDto.UserStateId));
         }
     }
 }

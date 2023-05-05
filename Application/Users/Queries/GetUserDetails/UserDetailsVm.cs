@@ -12,8 +12,6 @@ namespace Application.Users.Queries.GetUserDetails
 
         public string Login { get; set; }
 
-        public string Password { get; set; }
-
         public DateTime CreatedDate { get; set; }
 
         public Guid UserGroupId { get; set; }
@@ -29,9 +27,6 @@ namespace Application.Users.Queries.GetUserDetails
 
                 .ForMember(userVm => userVm.Login,
                     opt => opt.MapFrom(user => user.Login))
-
-                .ForMember(userVm => userVm.Password,
-                    opt => opt.MapFrom(user => user.Password))
 
                 .ForMember(userVm => userVm.CreatedDate,
                     opt => opt.MapFrom(user => user.CreatedDate))

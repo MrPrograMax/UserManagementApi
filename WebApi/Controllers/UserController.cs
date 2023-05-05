@@ -51,10 +51,11 @@ namespace WebApi.Controllers
             return Ok(userId);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Delete([FromBody] DeleteUserDto deleteUserDto)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var command = _mapper.Map<DeleteUserCommand>(deleteUserDto);
+            var command = new DeleteUserCommand { UserId = id };
+                
             await Mediator.Send(command);
 
             return NoContent();

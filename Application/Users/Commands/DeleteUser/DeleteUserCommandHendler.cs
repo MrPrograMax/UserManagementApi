@@ -26,7 +26,7 @@ namespace Application.Users.Commands.DeleteUser
                 throw new NotFoundException(nameof(User), request.UserId);
             }
 
-            var blockedGroup = await _dbContext.UserGroups
+            var blockedGroup = await _dbContext.UserStates
                 .FirstOrDefaultAsync(g => g.Code == "Blocked", cancellationToken);
 
             if (blockedGroup == null)
