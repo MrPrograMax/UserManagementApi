@@ -14,9 +14,9 @@ namespace Application.Users.Queries.GetUserDetails
 
         public DateTime CreatedDate { get; set; }
 
-        public Guid UserGroupId { get; set; }
+        public string UserGroupCode { get; set; }
 
-        public Guid UserStateId { get; set; }
+        public string UserStateCode { get; set; }
 
 
         public void Mapping(Profile profile)
@@ -31,11 +31,11 @@ namespace Application.Users.Queries.GetUserDetails
                 .ForMember(userVm => userVm.CreatedDate,
                     opt => opt.MapFrom(user => user.CreatedDate))
 
-                .ForMember(userVm => userVm.UserGroupId,
-                    opt => opt.MapFrom(user => user.UserGroupId))
+                .ForMember(userVm => userVm.UserGroupCode,
+                    opt => opt.MapFrom(user => user.UserGroup.Code))
 
-                .ForMember(userVm => userVm.UserStateId,
-                    opt => opt.MapFrom(user => user.UserStateId));
+                .ForMember(userVm => userVm.UserStateCode,
+                    opt => opt.MapFrom(user => user.UserState.Code));
         }
     }
 }

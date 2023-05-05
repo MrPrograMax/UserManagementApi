@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Users.Queries.GetUserList
 {
-    public class GetUserListQueryHendler 
+    public class GetUserListQueryHendler
         : IRequestHandler<GetUserListQuery, UserListVm>
     {
         private readonly IUserManagementDbContext _dbContext;
@@ -28,11 +28,13 @@ namespace Application.Users.Queries.GetUserList
         public async Task<UserListVm> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
             var usersQuery = await _dbContext.Users
+                .Include(u => u.UserGroup)
+                .Include(u => u.UserState)
                 .ProjectTo<UserLookupDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
             return new UserListVm { Users = usersQuery };
-                
+
         }
     }
 }

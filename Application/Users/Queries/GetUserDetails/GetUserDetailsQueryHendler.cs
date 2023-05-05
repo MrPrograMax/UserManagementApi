@@ -29,6 +29,8 @@ namespace Application.Users.Queries.GetUserDetails
         public async Task<UserDetailsVm> Handle(GetUserDetailsQuery request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Users
+                .Include(u => u.UserGroup)
+                .Include(u => u.UserState)
                 .FirstOrDefaultAsync(user => user.Id == request.UserId, cancellationToken);
 
             if (user == null || user.Id != request.UserId) 
