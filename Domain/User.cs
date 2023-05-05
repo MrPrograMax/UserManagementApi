@@ -24,6 +24,9 @@ namespace Domain
         [Required]
         public Guid UserStateId { get; set; }
 
+        [Required]
+        public byte[] Salt { get; set; }
+
 
         [ForeignKey("UserGroupId")]
         public virtual UserGroup UserGroup { get; set; }

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Application.Users.Commands.CreateUser
 {
@@ -22,6 +24,8 @@ namespace Application.Users.Commands.CreateUser
         public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             await Task.Delay(5000, cancellationToken); // задержка на 5 секунд
+
+            #region Валидация
 
             var userExists = await _dbContext.Users.AnyAsync(u => u.Login == request.Login, cancellationToken);
                 
@@ -40,13 +44,35 @@ namespace Application.Users.Commands.CreateUser
                 throw new AdminAlreadyExists();
             }
 
+            #endregion
+
+            #region Шифрование пароля
+
+            byte[] salt = GenerateSalt();
+
+            byte[] inputBytes = Encoding.UTF8.GetBytes(request.Password);
+            byte[] saltedBytes = new byte[inputBytes.Length + salt.Length];
+            Buffer.BlockCopy(inputBytes, 0, saltedBytes, 0, inputBytes.Length);
+            Buffer.BlockCopy(salt, 0, saltedBytes, inputBytes.Length, salt.Length);
+
+            string encryptedPassword = String.Empty;
+
+            using (var md5 = MD5.Create())
+            {
+                byte[] hashBytes = md5.ComputeHash(saltedBytes);
+                encryptedPassword = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+            }
+
+            #endregion
+
             var user = new User()
             {
                 Id = Guid.NewGuid(),
                 Login = request.Login,
-                Password = request.Password,
+                Password = encryptedPassword,
                 CreatedDate = DateTime.UtcNow,
                 UserGroupId = request.UserGroupId,
+                Salt = salt
             };
 
             var activeState = await _dbContext.UserStates
@@ -58,6 +84,16 @@ namespace Application.Users.Commands.CreateUser
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return user.Id;
+        }
+
+        private static byte[] GenerateSalt()
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] salt = new byte[16]; 
+                rng.GetBytes(salt); 
+                return salt;
+            }
         }
     }
 }
