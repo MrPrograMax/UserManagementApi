@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using WebApi.Authentication;
 using WebApi.Models;
 
 namespace WebApi.Controllers
@@ -21,6 +22,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
+        [BasicAuthentication]
         public async Task<ActionResult<UserListVm>> GetAll()
         {
             var query = new GetUserListQuery();
@@ -30,6 +32,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [BasicAuthentication]
         public async Task<ActionResult<UserListVm>> Get(Guid id)
         {
             var query = new GetUserDetailsQuery
@@ -52,6 +55,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [BasicAuthentication]
         public async Task<IActionResult> Delete(Guid id)
         {
             var command = new DeleteUserCommand { UserId = id };
