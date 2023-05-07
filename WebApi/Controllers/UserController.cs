@@ -55,7 +55,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        [BasicAuthentication]
+        [BasicAuthentication("Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var command = new DeleteUserCommand { UserId = id };
