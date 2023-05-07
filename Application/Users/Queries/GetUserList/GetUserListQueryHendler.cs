@@ -27,14 +27,27 @@ namespace Application.Users.Queries.GetUserList
 
         public async Task<UserListVm> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
-            var usersQuery = await _dbContext.Users
+            var usersQuery = _dbContext.Users
                 .Include(u => u.UserGroup)
                 .Include(u => u.UserState)
-                .ProjectTo<UserLookupDto>(_mapper.ConfigurationProvider)
+                .OrderByDescending(u => u.CreatedDate)
+                .ProjectTo<UserLookupDto>(_mapper.ConfigurationProvider);
+
+            var totalCount = await usersQuery.CountAsync(cancellationToken);
+            var totalPages = (int)Math.Ceiling((double)totalCount / request.PageSize);
+
+            var users = await usersQuery
+                .Skip((request.CurrentPage - 1) * request.PageSize)
+                .Take(request.PageSize)
                 .ToListAsync(cancellationToken);
 
-            return new UserListVm { Users = usersQuery };
-
+            return new UserListVm { 
+                Users = users, 
+                CurrentPage = request.CurrentPage, 
+                PageSize = request.PageSize,
+                TotalCountRecord = totalCount, 
+                TotalPages = totalPages 
+            };
         }
     }
 }

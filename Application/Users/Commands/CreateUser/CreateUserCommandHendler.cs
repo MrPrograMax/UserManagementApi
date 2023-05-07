@@ -23,6 +23,7 @@ namespace Application.Users.Commands.CreateUser
 
         public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            await Task.Delay(5000, cancellationToken); // задержка на 5 секунд
 
             #region Валидация
 
@@ -81,8 +82,6 @@ namespace Application.Users.Commands.CreateUser
 
             await _dbContext.Users.AddAsync(user, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
-
-            await Task.Delay(5000, cancellationToken); // задержка на 5 секунд
 
             return user.Id;
         }

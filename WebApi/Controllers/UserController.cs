@@ -21,11 +21,11 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("{pageNumber}/{pageSize}")]
         [BasicAuthentication]
-        public async Task<ActionResult<UserListVm>> GetAll()
+        public async Task<ActionResult<UserListVm>> GetAll(int pageNumber = 1, int pageSize = 10)
         {
-            var query = new GetUserListQuery();
+            var query = new GetUserListQuery { CurrentPage = pageNumber, PageSize = pageSize };
             var vm = await Mediator.Send(query);
 
             return Ok(vm);
