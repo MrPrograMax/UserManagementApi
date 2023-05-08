@@ -1,5 +1,6 @@
 ﻿using Application.Users.Commands.CreateUser;
 using Application.Users.Commands.DeleteUser;
+using Application.Users.Queries.GetAllUsers;
 using Application.Users.Queries.GetUserDetails;
 using Application.Users.Queries.GetUserList;
 using AutoMapper;
@@ -19,6 +20,16 @@ namespace WebApi.Controllers
         public UserController(IMapper mapper)
         {
             _mapper = mapper;
+        }
+
+        [HttpGet]
+        [BasicAuthentication]
+        public async Task<ActionResult<UserListVm>> GetAll()
+        {
+            var query = new GetAllUserQuery();
+            var vm = await Mediator.Send(query);
+
+            return Ok(vm);
         }
 
         [HttpGet("{pageNumber}/{pageSize}")]
